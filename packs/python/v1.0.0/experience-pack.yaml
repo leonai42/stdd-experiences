@@ -1,0 +1,32 @@
+# Python 经验包 / Python Experience Pack
+
+pack:
+  name: python
+  version: "1.0.0"
+  display_name: "Python 编程经验包"
+  description: "涵盖 Python async/await、类型系统、错误处理、FastAPI 等常见 AI 编程失败模式"
+  language: python
+  frameworks:
+    - FastAPI
+    - asyncio
+    - pydantic
+  maintainer: STDD Community
+  license: MIT
+
+stats:
+  total_experiences: 3
+  by_category:
+    cascading_errors: 1
+    scope_creep: 1
+    instruction_decay: 1
+  by_severity:
+    high: 2
+    medium: 1
+  min_confidence: 0.78
+  max_confidence: 0.85
+
+releases:
+  - version: "1.0.0"
+    date: "2026-06-02"
+    changes:
+      - "初始发布：3 条种子经验（async CancelledError / 范围蔓延 / AI 指令衰减）"

@@ -1,0 +1,27 @@
+# Go 经验包 / Go Experience Pack
+
+pack:
+  name: go
+  version: "1.0.0"
+  display_name: "Go 编程经验包"
+  description: "涵盖 Go 并发模式、错误处理、API 契约设计等常见 AI 编程失败模式"
+  language: go
+  frameworks:
+    - standard library
+  maintainer: STDD Community
+  license: MIT
+
+stats:
+  total_experiences: 1
+  by_category:
+    contract_gap: 1
+  by_severity:
+    high: 1
+  min_confidence: 0.78
+  max_confidence: 0.78
+
+releases:
+  - version: "1.0.0"
+    date: "2026-06-02"
+    changes:
+      - "初始发布：1 条种子经验（API 字段名前后端不一致）"
