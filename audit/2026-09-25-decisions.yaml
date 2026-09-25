@@ -1,0 +1,129 @@
+source:
+  repo: leonai42/stdd-experiences
+  branch: origin/main
+  commit: 142542c
+  pool: pending/
+  audited_on: '2026-09-25'
+  total: 82
+criteria:
+  from: CONTRIBUTING.md
+  rules:
+  - 可复现：同一错误模式出现 >=2 次
+  - 通用性：不依赖特定业务逻辑或项目结构
+  - 可操作：有明确检测触发条件与修复模板
+  - 分类正确：匹配 11 类失败模式之一
+  - 脱敏：无 IP/域名/密钥/业务专有名词
+  - 必填字段：pattern/category/root_cause/fix_template/language/tags 缺一退回
+buckets:
+  approve:
+    title: A_直接入池
+    criterion: 通用失败模式；必填字段齐全；有具体实例或可测触发条件
+    count: 36
+    ids:
+    - EXP-1112f4b6e142
+    - EXP-2026-0026
+    - EXP-2026-0027
+    - EXP-21eb86ed5cc0
+    - EXP-28a9349b1707
+    - EXP-29f917ebe3e5
+    - EXP-2db71fb00825
+    - EXP-301dea7d134b
+    - EXP-3e465445cb58
+    - EXP-3f562e517e3d
+    - EXP-3f57d52dfd96
+    - EXP-44b31cf0e955
+    - EXP-4a8f731a33d3
+    - EXP-4fec447d4460
+    - EXP-591a453c953e
+    - EXP-591dcd2c21a7
+    - EXP-6b7f66805397
+    - EXP-7512e8397ae1
+    - EXP-840d3c08092c
+    - EXP-9481b412a81a
+    - EXP-9797aa8fbdf6
+    - EXP-98910b78ea70
+    - EXP-a58efb79ca69
+    - EXP-aaefea8ede63
+    - EXP-b7802c4d931d
+    - EXP-b97a4cc3a67c
+    - EXP-c2d35848a205
+    - EXP-c7585f40940b
+    - EXP-cdf5e97cfa84
+    - EXP-d4339b68b7c5
+    - EXP-de6fae2a64c2
+    - EXP-df16fe6dff59
+    - EXP-dfe1c6a9f433
+    - EXP-e20bb17480cc
+    - EXP-efdcb0e830bf
+    - EXP-f6578b529d5c
+  rework:
+    title: B_通用化后入池
+    criterion: 洞见通用，但叙述绑定 STDD 工具链内部语法/路径，或需脱敏、需合并
+    count: 26
+    ids:
+    - EXP-196ac3d00a7a
+    - EXP-227ecda517f1
+    - EXP-38b3d0fea356
+    - EXP-39b92b6b78de
+    - EXP-6b439eb7be52
+    - EXP-7c1962ac8d46
+    - EXP-a335ea41489a
+    - EXP-a48bfff3ddc1
+    - EXP-a4ec00b5e16d
+    - EXP-a8dd8363d8dc
+    - EXP-a9d4043839d0
+    - EXP-aee7717f5f27
+    - EXP-b157d2d776c9
+    - EXP-b394e235f737
+    - EXP-b44623638e58
+    - EXP-b8459e98cf29
+    - EXP-ba28a575efbe
+    - EXP-bddf406f3fae
+    - EXP-c20d42371e69
+    - EXP-c3f1f8b69ccc
+    - EXP-c49a4d2a3291
+    - EXP-c732c2732d8c
+    - EXP-c7f5bea88992
+    - EXP-dba8c8c2fa29
+    - EXP-e30f9fd9701e
+    - EXP-s10-sim-argparse
+  rework-fields:
+    title: C_退回补齐字段
+    criterion: 缺 detection_trigger / fix_template / root_cause，按 CONTRIBUTING 必填字段规则退回
+    count: 7
+    ids:
+    - EXP-2026-0002
+    - EXP-2026-0003
+    - EXP-2026-0004
+    - EXP-2026-0015
+    - EXP-2026-0016
+    - EXP-2026-0017
+    - EXP-2026-0018
+  toolchain:
+    title: D_建议移出社区池
+    criterion: 描述的是 STDD 工具自身实现，下游社区用户无法据此行动
+    count: 9
+    ids:
+    - EXP-0c6a9e2c5d39
+    - EXP-16cedf590599
+    - EXP-20e2b6b23fe8
+    - EXP-3c9dc63a342e
+    - EXP-5fa21b23d5d6
+    - EXP-9e11d934db0d
+    - EXP-c9bb5ae5a506
+    - EXP-d68384da3f7c
+    - EXP-e4e124c1f186
+  reject-fixture:
+    title: E_拒绝_测试夹具
+    criterion: 占位符/测试数据泄漏，非真实经验
+    count: 2
+    ids:
+    - EXP-2026-0001
+    - EXP-ps20
+  reject-specific:
+    title: F_拒绝_项目专有
+    criterion: 依赖特定业务逻辑，不具通用性
+    count: 2
+    ids:
+    - EXP-e0f388bc14a2
+    - EXP-s10-enemydeck-defensive
