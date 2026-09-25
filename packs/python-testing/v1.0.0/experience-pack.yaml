@@ -1,0 +1,34 @@
+# Python 测试经验包 / Python Testing Experience Pack
+
+pack:
+  name: python-testing
+  version: "1.0.0"
+  display_name: "Python 测试与验证经验包"
+  description: "涵盖测试与验证基础设施的失败模式：pytest 用法、覆盖率测量、测试替身、断言与契约证据"
+  language: python
+  frameworks:
+    - pytest
+    - coverage
+    - pytest-cov
+    - numpy
+  maintainer: STDD Community
+  license: MIT
+
+stats:
+  total_experiences: 8
+  by_category:
+    coverage_vacuum: 4
+    tool_misuse: 2
+    contract_gap: 1
+    pipeline_break: 1
+  by_severity:
+    high: 3
+    medium: 5
+  min_confidence: 0.75
+  max_confidence: 0.90
+
+releases:
+  - version: "1.0.0"
+    date: "2026-09-25"
+    changes:
+      - "首次发布：8 条测试与验证基础设施失败模式（从社区 pending 池审计入池）"

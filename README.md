@@ -30,15 +30,24 @@ An STDD experience captures a **failure pattern** discovered during AI-assisted 
 
 ```
 stdd-experiences/
+├── pending/                       # 待审批（社区提交的候选经验）
+├── approved/                      # 已入池（通过审计、可作为 pack 的条目源）
+├── rejected/                      # 已拒绝
+├── audit/                         # 审计报告、判定明细、编写说明（维护者面，不随 pack 下发）
 ├── packs/                         # 经验包（按语言/领域分类）
 │   ├── python/
-│   │   └── v1.0.0/               # 版本化发布
+│   │   ├── v1.0.0/               # 版本化发布（快照，不再改动）
+│   │   └── v1.1.0/
 │   │       ├── experience-pack.yaml    # 包元数据
 │   │       └── EXP-PY-NNNN-*.md       # 经验条目
+│   ├── python-testing/
+│   │   └── v1.0.0/
+│   ├── business-logic/
+│   │   └── v1.0.0/
+│   ├── frontend/
+│   │   └── v1.0.0/
 │   ├── go/
 │   │   └── v1.0.0/
-│   │       ├── experience-pack.yaml
-│   │       └── EXP-GO-NNNN-*.md
 │   ├── java/                     # 规划中
 │   ├── rust/                     # 规划中
 │   ├── typescript/               # 规划中
@@ -57,11 +66,18 @@ stdd-experiences/
 
 | 包名 | 版本 | 条目数 | 最后更新 | 状态 |
 |------|------|--------|---------|------|
-| `python` | v1.0.0 | 3 | 2026-06-02 | ✅ 可用 |
+| `python` | **v1.1.0** | 16 | 2026-09-25 | ✅ 可用 |
+| `python-testing` | v1.0.0 | 8 | 2026-09-25 | ✅ 可用 |
+| `business-logic` | v1.0.0 | 11 | 2026-09-25 | ✅ 可用 |
+| `frontend` | v1.0.0 | 3 | 2026-09-25 | ✅ 可用 |
 | `go` | v1.0.0 | 1 | 2026-06-02 | ✅ 可用 |
 | `java` | — | — | — | 🔜 规划中 |
 | `rust` | — | — | — | 🔜 规划中 |
 | `typescript` | — | — | — | 🔜 规划中 |
+
+> `python` v1.1.0 在 v1.0.0 的 3 条基础上新增 13 条；v1.0.0 保留为历史快照。
+> 四个包均来自 2026-09-25 的社区 pending 池审计，依据见
+> [`audit/2026-09-25-audit-report.md`](audit/2026-09-25-audit-report.md)。
 
 ---
 
@@ -136,7 +152,8 @@ discovered ──(verify)──→ verified ──(3+ occurrences)──→ depo
 - **次版本号**：新增经验条目
 - **修订号**：修正错误、更新描述
 
-当前所有语言包均为 `v1.0.0`。
+每次条目变更发布为**新的版本目录**（快照），旧版本目录保持原样不再改动 ——
+这样下游可以锁定版本，diff 也有明确基线。当前：`python` v1.1.0，其余包 v1.0.0。
 
 ---
 

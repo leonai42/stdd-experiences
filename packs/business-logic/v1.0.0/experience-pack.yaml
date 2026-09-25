@@ -1,0 +1,34 @@
+# 业务系统与集成经验包 / Business Logic & Integration Experience Pack
+
+pack:
+  name: business-logic
+  version: "1.0.0"
+  display_name: "业务系统与集成经验包"
+  description: "涵盖业务系统与外部集成的失败模式：交易/资金安全、台账与一致性、对外报告口径、第三方回调协议、部署暴露面"
+  language: python
+  frameworks:
+    - Flask
+    - SQLite
+    - Nginx
+  maintainer: STDD Community
+  license: MIT
+
+stats:
+  total_experiences: 11
+  by_category:
+    contract_gap: 8
+    coverage_vacuum: 1
+    pipeline_break: 1
+    runtime_deviation: 1
+  by_severity:
+    critical: 1
+    high: 5
+    medium: 5
+  min_confidence: 0.75
+  max_confidence: 0.90
+
+releases:
+  - version: "1.0.0"
+    date: "2026-09-25"
+    changes:
+      - "首次发布：11 条业务系统失败模式（资金安全 / 台账一致性 / 对外口径 / 第三方协议 / 部署暴露面，从社区 pending 池审计入池）。其中 EXP-BL-0001 / EXP-BL-0002 / EXP-BL-0005 同源于一次推迟腿重试改动：队列被无条件清空、已批准的 SHALL 本身是缺陷、重试覆盖时长是派生量 —— 三条分别从状态机、规格、参数三个层面描述同一次事故。EXP-BL-0010 / EXP-BL-0011 同源于一次第三方回调集成：签名对象与解密输入的层次被两侧以相反方向搞错。来源：社区 pending 池审计入池（audit/2026-09-25-audit-report.md）。"

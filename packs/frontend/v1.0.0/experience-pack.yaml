@@ -1,0 +1,32 @@
+# 前端经验包 / Frontend Experience Pack
+
+pack:
+  name: frontend
+  version: "1.0.0"
+  display_name: "前端编程经验包"
+  description: "涵盖 React 异步竞态、产物导出静默失败、测试运行器路径解析等前端常见 AI 编程失败模式"
+  language: typescript
+  frameworks:
+    - React
+    - vitest
+    - html2canvas
+  maintainer: STDD Community
+  license: MIT
+
+stats:
+  total_experiences: 3
+  by_category:
+    context_loss: 1
+    runtime_deviation: 1
+    tool_misuse: 1
+  by_severity:
+    medium: 2
+    low: 1
+  min_confidence: 0.85
+  max_confidence: 0.85
+
+releases:
+  - version: "1.0.0"
+    date: "2026-09-25"
+    changes:
+      - "首次发布：3 条前端失败模式。其中 EXP-FE-0001 的 React 异步竞态与 EXP-FE-0002 的导出全白图同属「静默产出错误结果」族 —— 测试因 mock 或时序原因看不见，只有真实环境才暴露。来源：社区 pending 池审计入池（audit/2026-09-25-audit-report.md）。"

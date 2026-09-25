@@ -1,0 +1,43 @@
+# Python 经验包 / Python Experience Pack
+
+pack:
+  name: python
+  version: "1.1.0"
+  display_name: "Python 编程经验包"
+  description: "涵盖 Python async/await、错误处理、接口契约判定、精度与编码、YAML 序列化、FastAPI 等常见 AI 编程失败模式"
+  language: python
+  frameworks:
+    - FastAPI
+    - asyncio
+    - pydantic
+    - httpx
+    - SQLite
+  maintainer: STDD Community
+  license: MIT
+
+stats:
+  total_experiences: 16
+  by_category:
+    cascading_errors: 1
+    scope_creep: 1
+    instruction_decay: 1
+    contract_gap: 4
+    runtime_deviation: 8
+    content_quality: 1
+  by_severity:
+    critical: 1
+    high: 9
+    medium: 5
+    low: 1
+  min_confidence: 0.75
+  max_confidence: 0.90
+
+releases:
+  - version: "1.0.0"
+    date: "2026-06-02"
+    changes:
+      - "初始发布：3 条种子经验（async CancelledError / 范围蔓延 / AI 指令衰减）"
+  - version: "1.1.0"
+    date: "2026-09-25"
+    changes:
+      - "新增 13 条：接口契约与判定缺陷（降级返回值 / 2xx 误判 / 精度实现分歧 / 路由装配遗漏）、运行时偏离（空检索退化、guard fail-open、备份同名覆盖、容量边界丢弃、Windows 编码三则）与生成内容格式（YAML 冒号标量）"

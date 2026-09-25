@@ -86,64 +86,80 @@ severity: medium       # 大量条目明显应为 high/critical
 
 ---
 
-## 三、建议的首批入池清单（A 桶 36 条，按可组包分类）
+## 三、首批入池清单（A 桶 36 条）— 与实际落包对账
 
-### 建议组成 `python` pack v1.1.0（新增 7 条）
+本节初稿给出的是**建议分组**；实际组包时按下文口径做了 3 处调整，已就地订正。
+最终落包结果：**36 条源记录 → 35 条 pack 条目**（`EXP-21eb86ed5cc0` 并入 `EXP-2026-0026`），
+分布在 4 个包。
 
-| ID | 模式 |
-|----|------|
-| `EXP-df16fe6dff59` | 把「抛异常」改成「返回降级结构」，调用方把「读不到」读成「空」 |
-| `EXP-98910b78ea70` | 状态码判 `!= 200`，把 202 Accepted 当错误吞掉 |
-| `EXP-3f562e517e3d` | 共享常量表的消费者扫描：两处 floor 实现差一个 epsilon |
-| `EXP-b7802c4d931d` | `f"{x:g}"` 只有 6 位有效数字，近整数被向上取整放大敞口 |
-| `EXP-591a453c953e` | 空查询不过滤 → 检索退化为返回全部 |
-| `EXP-a58efb79ca69` | guard 只记录违规不拦截 → fail-open |
-| `EXP-dfe1c6a9f433` | 根目录 pytest 收集到子项目测试 → ModuleNotFoundError |
+**订正记录**（初稿 → 实际）：
 
-### 建议组成 `python-testing` pack v1.0.0（新增 9 条）
+1. `EXP-aaefea8ede63`（APIRouter 装配遗漏）与 `EXP-4a8f731a33d3`（GBK 控制台 emoji）
+   初稿列入 `python-testing`，实际归入 **`python`** —— 二者是应用代码/运行环境的失败，
+   与测试基础设施无关。
+2. `EXP-840d3c08092c`（备份同名覆盖）初稿误列入 `frontend`，实际归入 **`python`**。
+3. `EXP-4fec447d4460` 与 `EXP-de6fae2a64c2`（企业微信回调签名/契约，同一族）
+   初稿放在「其余零散」，实际一并归入 **`business-logic`**。
 
-| ID | 模式 |
-|----|------|
-| `EXP-2026-0026` | `pytest --cov` 多模块触发 numpy 二次加载 → 聚合测试集体假红 |
-| `EXP-d4339b68b7c5` | addopts 与命令行双 `-q` 抑制 summary → 测试率解析 total=0 |
-| `EXP-c2d35848a205` | 断言依赖墙钟相位 → 全量绿但仍非确定性 |
-| `EXP-f6578b529d5c` | `lru_cache` settings 单例 + 只 override 一个依赖 → 伪 404 |
-| `EXP-591dcd2c21a7` | 新增兜底 / 异常分支不进入覆盖账本 → 零覆盖 |
-| `EXP-efdcb0e830bf` | 测试路径绕过被改动的层 → 用例无 RED，不能作契约证据 |
-| `EXP-aaefea8ede63` | APIRouter 工厂漏 `return router` → 端点静默 404 |
-| `EXP-2026-0027` | 中文术语漂移致断言不命中（易误判为编码问题） |
-| `EXP-4a8f731a33d3` | Windows GBK 控制台 emoji → UnicodeEncodeError |
+### `python` pack v1.1.0（新增 13 条）
 
-### 建议组成 `business-logic` pack v1.0.0（金融/交易/报告，新增 9 条）
+| 源 ID | 新 ID | 模式 |
+|----|----|------|
+| `EXP-df16fe6dff59` | EXP-PY-0004 | 把「抛异常」改成「返回降级结构」，调用方把「读不到」读成「空」 |
+| `EXP-98910b78ea70` | EXP-PY-0005 | 状态码判 `!= 200`，把 202 Accepted 当错误吞掉 |
+| `EXP-3f562e517e3d` | EXP-PY-0006 | 共享常量表的消费者扫描：两处 floor 实现差一个 epsilon |
+| `EXP-b7802c4d931d` | EXP-PY-0007 | `f"{x:g}"` 只有 6 位有效数字，近整数被向上取整放大敞口 |
+| `EXP-591a453c953e` | EXP-PY-0008 | 空查询不过滤 → 检索退化为返回全部 |
+| `EXP-a58efb79ca69` | EXP-PY-0009 | guard 只记录违规不拦截 → fail-open |
+| `EXP-840d3c08092c` | EXP-PY-0010 | 备份文件名秒级时间戳，同秒两次备份互相覆盖 |
+| `EXP-9481b412a81a` | EXP-PY-0011 | 容量集合先 add 后 clear 丢条目 |
+| `EXP-c7585f40940b` | EXP-PY-0012 | YAML 标量含冒号未加引号 |
+| `EXP-9797aa8fbdf6` | EXP-PY-0013 | Windows 管道 GBK vs UTF-8 强制解码崩溃 |
+| `EXP-7512e8397ae1` | EXP-PY-0014 | HTTP 头非 ASCII 值 |
+| `EXP-4a8f731a33d3` | EXP-PY-0015 | Windows GBK 控制台 emoji → UnicodeEncodeError |
+| `EXP-aaefea8ede63` | EXP-PY-0016 | APIRouter 工厂返回的空对象致端点静默 404（**机制归因已订正，见 §六**） |
 
-| ID | 模式 |
-|----|------|
-| `EXP-3f57d52dfd96` | 推迟队列被无条件清空 → 未提交元素消失 → 单边裸暴露 |
-| `EXP-44b31cf0e955` | 已批准的 SHALL 本身是缺陷，用例全绿即反证据 |
-| `EXP-29f917ebe3e5` | 失败容器无消费方 → 部分失败被整体 200 掩盖 |
-| `EXP-28a9349b1707` | 覆盖声明「新取值下同样成立」，而用例跑在旧取值 |
-| `EXP-b97a4cc3a67c` | 重试覆盖时长是派生量，两个旋钮交互反直觉 |
-| `EXP-cdf5e97cfa84` | 读者可见字段多处登记，口径串形态不一 → 读数不可比 |
-| `EXP-3e465445cb58` | 同一字段两套新鲜度口径互不通气 |
-| `EXP-6b7f66805397` | 私有下载目录被静态 location 暴露，绕过计数 |
-| `EXP-2db71fb00825` | CLI 入口未跑迁移 → no such table（幂等自愈） |
+### `python-testing` pack v1.0.0（新增 8 条 / 消耗 9 条源记录）
 
-### 建议组成 `frontend` pack v1.0.0（新增 4 条）
+| 源 ID | 新 ID | 模式 |
+|----|----|------|
+| `EXP-2026-0026` + `EXP-21eb86ed5cc0` | EXP-PYT-0001 | `pytest --cov` 多模块触发 numpy 二次加载 → 聚合测试集体假红（**同族合并**） |
+| `EXP-d4339b68b7c5` | EXP-PYT-0002 | addopts 与命令行双 `-q` 抑制 summary → 测试率解析 total=0 |
+| `EXP-c2d35848a205` | EXP-PYT-0003 | 断言依赖墙钟相位 → 全量绿但仍非确定性 |
+| `EXP-f6578b529d5c` | EXP-PYT-0004 | `lru_cache` settings 单例 + 只 override 一个依赖 → 伪 404 |
+| `EXP-591dcd2c21a7` | EXP-PYT-0005 | 新增兜底 / 异常分支不进入覆盖账本 → 零覆盖 |
+| `EXP-efdcb0e830bf` | EXP-PYT-0006 | 测试路径绕过被改动的层 → 用例无 RED，不能作契约证据 |
+| `EXP-2026-0027` | EXP-PYT-0007 | 中文术语漂移致断言不命中（易误判为编码问题） |
+| `EXP-dfe1c6a9f433` | EXP-PYT-0008 | 根目录 pytest 收集到子项目测试 → ModuleNotFoundError |
 
-| ID | 模式 |
-|----|------|
-| `EXP-301dea7d134b` | React 异步闭包竞态：迟到响应用旧 session 覆盖新视图 |
-| `EXP-e20bb17480cc` | html2canvas 捕获离屏元素输出全白，且不报错 |
-| `EXP-1112f4b6e142` | vitest 中 `fileURLToPath(import.meta.url)` 抛 scheme 错误 |
-| `EXP-840d3c08092c` | 备份文件名秒级时间戳，同秒两次备份互相覆盖 |
+### `business-logic` pack v1.0.0（金融/交易/报告，新增 11 条）
 
-### 其余零散（4 条）
+| 源 ID | 新 ID | 模式 |
+|----|----|------|
+| `EXP-3f57d52dfd96` | EXP-BL-0001 | 推迟队列被无条件清空 → 未提交元素消失 → 单边裸暴露 |
+| `EXP-44b31cf0e955` | EXP-BL-0002 | 已批准的 SHALL 本身是缺陷，用例全绿即反证据 |
+| `EXP-29f917ebe3e5` | EXP-BL-0003 | 失败容器无消费方 → 部分失败被整体 200 掩盖 |
+| `EXP-28a9349b1707` | EXP-BL-0004 | 覆盖声明「新取值下同样成立」，而用例跑在旧取值 |
+| `EXP-b97a4cc3a67c` | EXP-BL-0005 | 重试覆盖时长是派生量，两个旋钮交互反直觉 |
+| `EXP-cdf5e97cfa84` | EXP-BL-0006 | 读者可见字段多处登记，口径串形态不一 → 读数不可比 |
+| `EXP-3e465445cb58` | EXP-BL-0007 | 同一字段两套新鲜度口径互不通气 |
+| `EXP-6b7f66805397` | EXP-BL-0008 | 私有下载目录被静态 location 暴露，绕过计数 |
+| `EXP-2db71fb00825` | EXP-BL-0009 | CLI 入口未跑迁移 → no such table（幂等自愈） |
+| `EXP-4fec447d4460` | EXP-BL-0010 | 回调签名校验的对象层次错位（同一族，见 BL-0011） |
+| `EXP-de6fae2a64c2` | EXP-BL-0011 | 解密契约与测试替身自洽、与真实协议不符 |
 
-`EXP-9481b412a81a`（容量集合先 add 后 clear 丢条目）、
-`EXP-c7585f40940b`（YAML 标量含冒号未加引号）、
-`EXP-9797aa8fbdf6`（Windows 管道 GBK vs UTF-8 强制解码崩溃）、
-`EXP-7512e8397ae1`（HTTP 头非 ASCII 值）、
-`EXP-4fec447d4460`（回调签名对象层次 + 测试自洽偏离真实协议）
+### `frontend` pack v1.0.0（新增 3 条）
+
+| 源 ID | 新 ID | 模式 |
+|----|----|------|
+| `EXP-301dea7d134b` | EXP-FE-0001 | React 异步闭包竞态：迟到响应用旧 session 覆盖新视图 |
+| `EXP-e20bb17480cc` | EXP-FE-0002 | html2canvas 捕获离屏元素输出全白，且不报错 |
+| `EXP-1112f4b6e142` | EXP-FE-0003 | vitest 中 `fileURLToPath(import.meta.url)` 抛 scheme 错误 |
+
+### 对账
+
+13 + 9（8 条）+ 11 + 3 = **36 条源记录**，与 A 桶判定数一致；产出 **35 条 pack 条目**
+（1 条来自同族合并）。四份包的 `experience-pack.yaml` 的 `stats` 均与各自条目逐项核对一致。
 
 ---
 
@@ -176,3 +192,89 @@ severity: medium       # 大量条目明显应为 high/critical
 3. **元数据回填**：导出时应落真实的 `occurrences` / `confidence` / `severity`，
    而不是统一写默认值——否则下游无法基于元数据做准入判断。
 4. **受众过滤**：导出时区分「应用项目经验」与「STDD 自身开发经验」，后者不应进入社区池。
+
+---
+
+## 六、落包期的订正记录（2026-09-26 追加）
+
+本节记录 A 桶 36 条在**编写 pack 条目**阶段发现的、与源记录不符的事实，
+以及对应的处理。判定结论（36 条入池）未变，但两条条目的元数据被下调。
+
+### 1. `EXP-aaefea8ede63` → `EXP-PY-0016`：机制归因与实测冲突（confidence 0.90 → 0.75）
+
+源记录称「APIRouter 工厂漏 `return router` → 挂载点收到 `None` → **应用启动无报错**、端点静默 404」。
+
+**实测**：`app.include_router(None)` 当场抛
+`AttributeError: 'NoneType' object has no attribute 'routes'` —— 这是启动期的**响亮失败**，
+与源记录自己记录的症状（「应用启动无任何报错」）直接矛盾。
+
+**推论**：「启动无报错 + 端点 404」这一组症状对应的必然是**合法但为空**的 router
+（如工厂内新建 router 并注册路由、却返回了另一个空实例），或路由注册到了别的对象上。
+「漏 `return`」不是本例的成因。
+
+**处理**：`pattern` / `root_cause` 中的归因标为**待复核**，按可确证的观察陈述；
+`fix_template` 与 ✅ 示例补入两种失效形态的区分判据
+（`isinstance(router, APIRouter)` 挡 `None`、`len(router.routes) > 0` 挡「合法但空」）；
+`confidence` **0.90 → 0.75**，`**置信度说明**` 重写为「核心教训独立于归因成立，
+但因果链待复核」；`experience-pack.yaml` 的 `min_confidence` 随之 0.78 → 0.75。
+
+**原则**：源记录也是证据，同样可以被证伪。保留确证的观察与无歧义的修复方向，
+把归因降级 —— 不为保住高分而沿用与实测冲突的因果表述。
+
+### 2. `EXP-b7802c4d931d` → `EXP-PY-0007`：方向表述不精确（条目无需改）
+
+源记录称 `1.9999999` 与 `2.0000004`「都被四舍五入成 `2`，方向是向上」。实测：
+
+| 输入 | `f"{x:g}"` | 实际方向 |
+|---|---|---|
+| `1.9999999` | `"2"` | 向上 |
+| `2.0000004` | `"2"` | 向下 |
+| `5.0000001` | `"5"` | 向下 |
+
+源记录的笼统表述只对其中一个取值成立。本包条目写的是「其中向上的一侧」，
+**未继承源记录的笼统表述**，因此不需要改动；源记录本身建议订正。
+
+### 3. `EXP-21eb86ed5cc0` 与 `EXP-2026-0026` 合并落包
+
+同族重复（`pytest --cov` 触发 numpy 二次加载），实际产出为一条 `EXP-PYT-0001`，
+`audit_source` 记作 `EXP-2026-0026 (+EXP-21eb86ed5cc0)`。
+因此 36 条源记录 → **35 条 pack 条目**。
+
+### 4. 组包归属的 3 处订正
+
+见 §三开头的订正记录（`EXP-aaefea8ede63` / `EXP-4a8f731a33d3` 归 `python` 而非
+`python-testing`；`EXP-840d3c08092c` 归 `python` 而非 `frontend`；
+`EXP-4fec447d4460` / `EXP-de6fae2a64c2` 归 `business-logic`）。
+
+### 5. 未决项
+
+- **元数据回填仍未落地**：`audit.confidence_rationale` 里给的是审计判断，
+  `occurrences` 绝大多数仍是 1（与源记录一致，未抬高）。CONTRIBUTING 要求
+  「同一模式出现 ≥2 次」，本批按「审计判断 + 正文证据密度」入池，
+  **可复现性口径的缺口是整批的，不是单条的** —— 需在导出管道回填真实计数后复核。
+- **上一版种子条目未达现行格式要求**：`packs/python/v1.0.0/` 的 3 条（2026-06-02 发布）
+  与 `packs/go/v1.0.0/` 的 1 条均**缺 `**置信度说明**`**，其中 `EXP-PY-0003` 还缺
+  `## 代码示例`。这是 CONTRIBUTING 现行条目格式之前的历史产物，本次未回改已发布快照
+  （`EXP-PY-0003` 的具体处理见 [`authoring-notes/python-v1.1.0.md`](authoring-notes/python-v1.1.0.md) §3-E）。
+  **建议下一版统一补齐。** 本次新增的 [`validate_packs.py`](validate_packs.py) 已把
+  条目格式要求与 `stats` 对账变成可执行检查，这些遗留项以 WARN 报出、不计入失败：
+
+  ```
+  $ python audit/validate_packs.py
+  ...
+  结果：0 个错误，11 个已知遗留告警   # 全部落在上述种子条目
+  ```
+- **`EXP-PY-0016` 的源记录建议订正**；`EXP-PY-0007` 的源记录建议订正。
+- **编写说明（AUTHORING-NOTES）已移出 `packs/`**。初稿把 `AUTHORING-NOTES.md` 放在包目录内，
+  但它为记录「去掉了哪些标识符」而**逐条列出了那些标识符本身**
+  （项目类名、字段名、规格 ID、CLI 特性名）。包目录是**随 `experience pull` 下发的制品**，
+  把待脱敏的名单放进制品，等于让脱敏在这一步失效。已移至
+  `audit/authoring-notes/<pack>-<version>.md`：追溯价值保留，下发面清净。
+- **`approved/` 中的源记录仍含未脱敏标识符（经核实，属预期设计，但建议明确成文）**。
+  例如 `approved/EXP-a58efb79ca69.md` 仍含项目规格 ID `EXP-2026-002`。
+  即：`approved/` 是**维护者面的入库池**（保留原文以便复核），
+  脱敏发生在 **pack 编写**这一步，`packs/` 才是下发面。
+  这条分工目前只体现在本报告里，建议写进 CONTRIBUTING，避免下一位作者把 `approved/`
+  的内容直接搬进 `packs/`。
+- **B 桶 26 条的通用化改写尚未开始**（含 8 组同族合并）。计划见 §四，
+  其中 8 条同主题条目建议独立成 `judgment-integrity` 包。
