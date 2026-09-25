@@ -1,0 +1,32 @@
+# 判据完整性经验包 / Judgment Integrity Experience Pack
+
+pack:
+  name: judgment-integrity
+  version: "1.0.0"
+  display_name: "判据完整性经验包"
+  description: "涵盖判据 / 护栏 / 声明失效的多种形态：扫描面与声称面不同宽、静默跳过与静默缩小、把推断当结论、探针落在别的机制上、同一事实多处登记、拼接破坏产物结构"
+  language: python
+  frameworks: []
+  maintainer: STDD Community
+  license: MIT
+
+stats:
+  total_experiences: 20
+  by_category:
+    coverage_vacuum: 10
+    contract_gap: 7
+    hallucination: 1
+    tool_misuse: 1
+    pipeline_break: 1
+  by_severity:
+    high: 15
+    medium: 4
+    low: 1
+  min_confidence: 0.80
+  max_confidence: 0.90
+
+releases:
+  - version: "1.0.0"
+    date: "2026-09-26"
+    changes:
+      - "首次发布：20 条判据 / 护栏 / 声明失效的失败模式（来自社区 pending 池审计入池）。典型形态：判据的扫描面 ≠ 它声称核对的面（窄向假绿 / 宽向假红）、判据住在被核对的文本里、护栏没有任何执行路径能到达它、流程末端护栏恒 SKIP、按覆盖比例衡量的完整性指标被恒绿判据填平、--dry-run 产生写副作用（含伪造审计链）、静默吞掉单条输入、把推断当结论登记、探针自身形状落在另一套机制的作用域里、同一事实多处登记、拼接模板未剥离前置块。其中 5 组为同族合并条目：EXP-JI-0001（扫描面两向）、EXP-JI-0010（--dry-run 写副作用，两个不同 CLI）、EXP-JI-0011（两侧键名 / 词表不一致）、EXP-JI-0017（推断当结论 + 代理量反推）、EXP-JI-0019（同一事实多处登记）。"

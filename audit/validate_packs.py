@@ -33,6 +33,15 @@ import yaml
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PACKS_DIR = os.path.join(REPO_ROOT, "packs")
 
+# Windows 控制台默认 GBK，而告警信息里含 ❌ / ✅ 等符号，直接 print 会抛
+# UnicodeEncodeError（校验脚本以「能跑」为前提，不能因为控制台编码而崩）。
+for stream in (sys.stdout, sys.stderr):
+    if hasattr(stream, "reconfigure"):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (ValueError, OSError):  # 非文本流 / 已关闭
+            pass
+
 REQUIRED_FIELDS = [
     "experience_id",
     "category",

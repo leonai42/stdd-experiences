@@ -1,0 +1,26 @@
+# TypeScript 经验包 / TypeScript Experience Pack
+
+pack:
+  name: typescript
+  version: "1.0.0"
+  display_name: "TypeScript 经验包"
+  description: "涵盖 TypeScript / Node CLI 的常见 AI 编程失败模式：参数解析、异步与运行时行为偏离"
+  language: typescript
+  frameworks: []
+  maintainer: STDD Community
+  license: MIT
+
+stats:
+  total_experiences: 1
+  by_category:
+    runtime_deviation: 1
+  by_severity:
+    medium: 1
+  min_confidence: 0.90
+  max_confidence: 0.90
+
+releases:
+  - version: "1.0.0"
+    date: "2026-09-26"
+    changes:
+      - "首次发布：1 条 CLI 参数解析失败模式（对单个 argv 元素做空格切分取「下一个参数」，而 argv 已按空格切分 → 数值与枚举参数静默落到默认值）。来源：社区 pending 池审计入池（audit/2026-09-25-audit-report.md）。"
