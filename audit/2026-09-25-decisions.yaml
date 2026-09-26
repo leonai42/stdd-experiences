@@ -127,3 +127,40 @@ buckets:
     ids:
     - EXP-e0f388bc14a2
     - EXP-s10-enemydeck-defensive
+
+# 落盘结果（2026-09-26）。上面是「决定」，这里是「决定落到哪里」——
+# 两份分开记，是因为决定的依据与落盘的位置可能不同（D 桶即如此：决定是移出，落在 out-of-scope/）。
+landing:
+  landed_on: '2026-09-26'
+  landed_commit: 62b73cf
+  by_bucket:
+    approve:
+      verdict: approve
+      landed: approved/ + packs/（A 桶 36 条 → 35 个条目）
+      note: 见 2026-09-25-audit-report.md §三/§六
+    rework:
+      verdict: approve-generalized
+      landed: approved/ + packs/judgment-integrity + packs/typescript
+      note: 26 条 → 21 个条目；EXP-s10-sim-argparse 原判 B 属误分，改归 typescript。见 §七
+    rework-fields:
+      verdict: needs-rework
+      landed: pending/（原地保留，已加 audit 块）
+      note: 逐条标注了缺哪些必填字段。**C 桶 criterion 已订正**：原写「缺
+        detection_trigger / fix_template / root_cause」，但 detection_trigger 在
+        CONTRIBUTING 里是「质量加分项」而非必填，不应计入退回理由。实际缺：7/7 缺
+        fix_template，其中 5 条另缺 root_cause。
+    toolchain:
+      verdict: out-of-scope
+      landed: out-of-scope/
+      note: 移出社区池，但**不叫拒绝** —— 见解对工具维护者可能有用。见 out-of-scope/README.md
+    reject-fixture:
+      verdict: reject
+      landed: rejected/
+    reject-specific:
+      verdict: reject
+      landed: rejected/
+  pool_after: 'pending/ 由 82 条降至 7 条（剩余即 C 桶），approved/ 62 条，rejected/ 4 条，
+    out-of-scope/ 9 条'
+  consistency: '36 + 26 + 7 + 9 + 2 + 2 = 82，与 source.total 对账一致'
+  cli_gap: 'stdd experience 无针对社区 pending/ 池的 approve/reject 命令；本次搬运为手工完成。
+    详见 2026-09-25-audit-report.md §八'

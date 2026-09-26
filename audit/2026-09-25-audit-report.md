@@ -378,3 +378,77 @@ severity: medium       # 大量条目明显应为 high/critical
 - **源记录仍保留在 `approved/`**：按 §六 所述分工，`approved/` 是维护者面的入库池、
   允许保留原文；**脱敏发生在 pack 编写这一步**。本次 26 条的原始记录（含未脱敏标识符）
   仍在 `approved/`，刻意如此。
+
+---
+
+## 八、C/D/E/F 四桶处置 + CLI 能力核查（2026-09-26 追加）
+
+### 1. 四桶落盘结果
+
+A / B 桶落定后，`pending/` 尚余 20 条（C 7 + D 9 + E 2 + F 2）。本轮四桶全处置，
+逐条在记录 frontmatter 末尾加了 `audit` 块（与 `approved/` 的约定一致）。
+
+| 桶 | 判定 | 落点 | 条数 |
+|---|---|---|---|
+| C_退回补齐字段 | `needs-rework` | `pending/`（原地保留，加 `audit` 块标注缺哪些字段） | 7 |
+| D_建议移出社区池 | `out-of-scope` | `out-of-scope/`（新建） | 9 |
+| E_拒绝_测试夹具 | `reject` | `rejected/` | 2 |
+| F_拒绝_项目专有 | `reject` | `rejected/` | 2 |
+
+对账：36 + 26 + 7 + 9 + 2 + 2 = **82**，与 `source.total` 一致。
+`pending/` 由 82 条降至 7 条（剩余即 C 桶）。
+
+**D 桶单列而不是拒绝**，因为它的判定依据是「受众不对」而非「记录不成立」：
+这 9 条描述的是 STDD 工具链自身的实现（Gate / change / canon / verify 适配器），
+下游社区用户读完没有可采取的行动，但对工具维护者可能有价值。故落 `out-of-scope/`
+并配 README 说明与 `rejected/` 的区别（见该目录 README）。
+
+### 2. 订正：C 桶的 criterion 写错了一个字段
+
+原 criterion 写「缺 `detection_trigger` / `fix_template` / `root_cause`」，
+但 CONTRIBUTING 把 `detection_trigger` 列在**质量加分项**，不是必填字段。
+按原措辞会把 7 条全部误判为「缺 detection_trigger 所以退回」——理由是错的。
+
+逐条核对后的实际缺失（已写入各条的 `audit.missing_required_fields`）：
+
+- 7/7 缺 `fix_template`（必填，退回理由成立）；
+- 其中 5 条（0015–0018）另缺 `root_cause`（必填）；
+- 7/7 缺 `detection_trigger`，但**不计入退回理由**，另记在 `audit.also_missing_bonus`。
+
+### 3. 拒绝不依据形式合规性
+
+E / F 两组正好构成对照：`EXP-2026-0001`（`source_change: test-change-001`，
+描述泛化到「utils module」）与 `EXP-e0f388bc14a2`（绑定具体项目词典键）的
+**必填字段完全齐备**，格式上挑不出毛病，但内容是合成的 / 绑死某个项目的；
+而 `EXP-ps20` 连字段都是二字母占位。两者都拒绝 —— **字段齐全不等于应当入池**。
+反过来，缺字段也不必然拒绝，那是 C 桶的「退回补齐」。已写入 `rejected/README.md`。
+
+### 4. CLI 能力核查：`stdd experience` 没有 pending 池的 approve/reject
+
+本次先按要求核查了工具链能否用 CLI 完成审批，结论是**不能**。逐条证据：
+
+| 命令 | 实际作用域 | 能否用于本仓 `pending/` |
+|---|---|---|
+| `experience share <eid>` | 克隆社区仓 → 写 `pending/<eid>.md` → 自行 `git add/commit/push` | ❌ 是**贡献侧**（投稿），非审核侧 |
+| `experience verify/deposit/retire` | 本地 `.stdd/experiences/` 的 `lifecycle_state` 迁移 | ❌ 作用于本地库，不是社区池 |
+| `experience review` | 交互式审核**本地** `discovered` 草稿（选项：Share+Deposit / Local Only / Skip） | ❌ 同上 |
+| `curate pull/deduplicate/review/pack` | `.stdd/curation/inbox/*.tar.gz` —— **已发布 pack 的收件箱** | ❌ 不触及 `pending/`/`approved/`/`rejected/` |
+
+`curate.py` 通篇不出现 `pending`/`approved`/`rejected` 三个目录名；
+`experience.py` 只在一处用 `pending/`，且是 `share` 的**写入**路径。
+因此**本仓「pending → approved / rejected」的搬运没有 CLI 支持，只能手工完成**。
+
+这也解释了仓内历史里 `share: EXP-xxx` 形式的提交（如 `142542c`）——
+它们由 `experience share` 内部的 subprocess 产生（提交信息格式为 `f"share: {eid}"`）。
+
+**建议**：这属于工具链的能力缺口。若要补齐，最小可用形态是一个
+`stdd experience curate pending`（在社区仓根下跑）：读 `pending/`，对每条接受
+approve / reject / rework 三种判定，按本仓已确立的约定写入 `audit` 块并移动到
+对应目录。本轮 20 条的手工处置即该命令的行为规格。
+
+### 5. 一处权限边界（未绕过）
+
+本会话的 `git push` 被 `block_dangerous_git.py` 钩子拦截。值得注意的是
+`experience share` **自带 push**（内部 subprocess 调 `git push`），理论上是一条能绕开该钩子的
+路径。**未采用** —— 用另一个工具去执行被明确拦下的动作，等于绕过使用者设的拦截。
+这批审核结果的发布仍应由仓主本人推送。

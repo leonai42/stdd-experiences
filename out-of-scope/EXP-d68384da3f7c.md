@@ -29,6 +29,19 @@ tags:
 - canonical
 - human-view
 - archive
+audit:
+  audited_on: '2026-09-26'
+  audit_commit: 62b73cf
+  verdict: out-of-scope
+  bucket: D_建议移出社区池
+  reason: '描述的是 STDD 工具链自身实现，下游社区用户无法据此行动'
+  note: '非质量拒绝 —— 见解对工具维护者可能有用，故移入 out-of-scope/ 而非 rejected/'
+  # 本批 8 条经逐条核对确认通篇为 STDD 工具链内部机制（Gate/change/canon/verify 适配器）；
+  # EXP-20e2b6b23fe8 是唯一可争议的一条：它讲的是「子代理的验证结论必须落盘为交付物」，
+  # 内核可迁移到任何多代理流程，但记录通篇用 C1/C7/phase-context 的工具链词汇写就，
+  # 按 CONTRIBUTING「下游社区用户能否据此行动」判为移出。若日后增设「方法论」主题包，
+  # 应复议此条。
+
 ---
 
 DELIVER 阶段实测：stdd canon verify 报 DC-HASH 不一致（YAML 5a58ef08 vs MD 637dc4d6）—— 那是 proposal.md 停在 Gate 1 的渲染。修好 proposal 后复查 .stdd<project>/<module>，发现它只有 4 个 Requirement，而 canonical code spec 已由 ADJ-005 增加到 5 个（缺 REQ-LTP-LEV-005 及其 3 个 Scenario）。根因：canon generate 不带 --type 时只渲染 proposal；spec.md 的渲染没有哈希背书，所以 canon verify 对它完全沉默。归档是终态：归档后 canon generate 会拒绝重渲染（'已归档 change 的 Human View 不重新生成'），只能 rollback -> generate -> 重新 archive。

@@ -26,6 +26,14 @@ tags:
 - 命名一致性
 - 官网
 - 本地化
+audit:
+  audited_on: '2026-09-26'
+  audit_commit: 62b73cf
+  verdict: reject
+  bucket: F_拒绝_项目专有
+  reason: '依赖特定业务逻辑，不具通用性'
+  detail: '绑定具体项目的双语词典键（f4/dl5）与项目官方名 Dao-financial-services；可迁移的内核（名称字段不随语言本地化）撑不起整条记录'
+
 ---
 
 

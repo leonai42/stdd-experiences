@@ -18,6 +18,14 @@ adoption_count: 0
 source_change: 2026-09-01-sango-10-chapters-2-4
 source_file: src<project>/<module>
 tags: [balance, sim, enemy-deck]
+audit:
+  audited_on: '2026-09-26'
+  audit_commit: 62b73cf
+  verdict: reject
+  bucket: F_拒绝_项目专有
+  reason: '依赖特定业务逻辑，不具通用性'
+  detail: '卡牌对战项目的数值调参（识破/铁壁/反攻 等具体卡牌与城防值），是平衡调整而非失败模式，换项目不可复现'
+
 ---
 # 敌方卡组防御牌密度导致 AI 平局坍缩
 

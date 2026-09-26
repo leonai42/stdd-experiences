@@ -30,9 +30,10 @@ An STDD experience captures a **failure pattern** discovered during AI-assisted 
 
 ```
 stdd-experiences/
-├── pending/                       # 待审批（社区提交的候选经验）
-├── approved/                      # 已入池（通过审计、可作为 pack 的条目源）
-├── rejected/                      # 已拒绝
+├── pending/                       # 待审批（社区提交的候选经验；当前 7 条，均为待补齐字段）
+├── approved/                      # 已入池（通过审计、可作为 pack 的条目源；62 条）
+├── rejected/                      # 已拒绝（记录不成立：夹具泄漏 / 绑定特定业务）
+├── out-of-scope/                  # 移出社区池（记录成立但受众不对：STDD 工具链自身实现）
 ├── audit/                         # 审计报告、判定明细、编写说明（维护者面，不随 pack 下发）
 ├── packs/                         # 经验包（按语言/领域分类）
 │   ├── python/
@@ -83,6 +84,11 @@ stdd-experiences/
 > 前四个包来自 2026-09-25 的 pending 池审计（A 桶直接入池），
 > `judgment-integrity` 与 `typescript` 来自同次审计的 B 桶（通用化改写后入池），
 > 依据见 [`audit/2026-09-25-audit-report.md`](audit/2026-09-25-audit-report.md)。
+>
+> 同次审计的其余四桶已处置完毕：C 桶退回 `pending/` 待补齐字段（7 条），
+> D 桶移入 [`out-of-scope/`](out-of-scope/README.md)（9 条 —— 记录成立但受众不对，
+> **不是拒绝**），E / F 桶移入 [`rejected/`](rejected/README.md)（4 条）。
+> 82 条来源全部有落点，无悬空。
 
 > **`judgment-integrity` 是跨语言的主题包**，不是语言包：它收录「判据 / 护栏 / 声明失效」
 > 这一类跨语言的失败模式 —— 扫描面与声称面不同宽、护栏没有任何执行路径能到达、

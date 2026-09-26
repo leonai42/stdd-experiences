@@ -29,6 +29,19 @@ tags:
 - ledger
 - loop-filter
 - superloop
+audit:
+  audited_on: '2026-09-26'
+  audit_commit: 62b73cf
+  verdict: out-of-scope
+  bucket: D_建议移出社区池
+  reason: '描述的是 STDD 工具链自身实现，下游社区用户无法据此行动'
+  note: '非质量拒绝 —— 见解对工具维护者可能有用，故移入 out-of-scope/ 而非 rejected/'
+  # 本批 8 条经逐条核对确认通篇为 STDD 工具链内部机制（Gate/change/canon/verify 适配器）；
+  # EXP-20e2b6b23fe8 是唯一可争议的一条：它讲的是「子代理的验证结论必须落盘为交付物」，
+  # 内核可迁移到任何多代理流程，但记录通篇用 C1/C7/phase-context 的工具链词汇写就，
+  # 按 CONTRIBUTING「下游社区用户能否据此行动」判为移出。若日后增设「方法论」主题包，
+  # 应复议此条。
+
 ---
 
 Dao-financial-services 反馈：close 循环 B 抓取了循环 A 的 change（跨循环污染）；且 dialog 人工放行 Gate 3 从不写账本 → 账本恒空 → 触发 V3.5.1 防御性回填时拿不到正确的当前循环条目。修复（V3.7.2 change 2026-08-29-superloop-backfill-loop-filter）：D1 new 写归属标记 / D2 回填循环过滤+WARN / D3 dialog 通道匹配标记自动记账 / D4 close 交叉核对。回归：11 个新 TC 全过，684 全量通过。
