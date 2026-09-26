@@ -11,3 +11,7 @@ Thumbs.db
 # 忽略 IDE 配置
 .vscode/
 .idea/
+
+# 忽略 Python 缓存（audit/validate_packs.py 运行后会生成）
+__pycache__/
+*.py[cod]

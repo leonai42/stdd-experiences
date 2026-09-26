@@ -90,6 +90,46 @@ def is_legacy(rel_key):
     return rel_key.startswith(LEGACY_PREFIXES)
 
 
+def check_confidence_note(rel_key, body, fm):
+    """`**置信度说明**` 段必须与 frontmatter 的取值自洽。
+
+    本条检查起源于两次真实缺陷：改 frontmatter 的 `confidence` / `original_confidence`
+    却漏改正文说明，于是**已发布的条目里同时存在两个互相矛盾的置信度声明**。
+    单条条目看不出问题（两处都不报错），只有跨字段对读才暴露 —— 正是本仓归档的
+    「同一事实多处登记」模式，所以由校验脚本兜住，不靠人复查。
+
+    只报 WARN，不报 ERROR：段内数字有多种合法写法（叙述审计过程时会提到被否决的取值），
+    精确语义判断不在脚本能力内。这里只查两件无歧义的事。
+    """
+    warnings = []
+    seg = body[body.index("**置信度说明**"):]
+
+    conf = fm.get("confidence")
+    if isinstance(conf, (int, float)):
+        cited = {float(n) for n in re.findall(r"\b0\.\d+\b", seg)}
+        if float(conf) not in cited:
+            warnings.append(
+                f"{rel_key}: `**置信度说明**` 未出现 frontmatter 的 confidence={conf}（段内数字：{sorted(cited) or '无'}）"
+            )
+
+    orig = fm.get("original_confidence")
+    if isinstance(orig, (int, float)):
+        # 只看紧跟在 `original_confidence` 之后的数字。取「前后一个窗口」会把上一句话里
+        # 的取值也卷进来（例如「给 0.90。……`original_confidence` 的 0.5」），
+        # 于是既漏报真缺陷、又对无数字的句子误报。英文标识符后面跟中文时，
+        # 取值一律出现在其**之后**，据此只向后看。
+        for hit in re.finditer(r"original_confidence", seg):
+            bound = {float(n) for n in re.findall(r"\b0\.\d+\b", seg[hit.end(): hit.end() + 60])}
+            if bound and float(orig) not in bound:
+                warnings.append(
+                    f"{rel_key}: 段内 `original_confidence` 之后出现的数字 {sorted(bound)} "
+                    f"不含 frontmatter 的 {orig} —— 疑似改字段时漏改说明"
+                )
+                break
+
+    return warnings
+
+
 def check_entry(rel_key, path):
     """返回 (errors, warnings, parsed_frontmatter 或 None)。"""
     errors, warnings = [], []
@@ -134,6 +174,8 @@ def check_entry(rel_key, path):
 
     if "**置信度说明**" not in body:
         (warnings if legacy else errors).append(f"{rel_key}: `## 对应失败模式` 末尾缺 `**置信度说明**`")
+    else:
+        warnings += check_confidence_note(rel_key, body, fm)
 
     present = [s for s in SECTIONS if s in body]
     positions = [body.index(s) for s in present]
